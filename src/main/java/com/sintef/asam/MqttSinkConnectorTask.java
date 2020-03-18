@@ -102,7 +102,7 @@ public class MqttSinkConnectorTask extends SinkTask {
         mqttConnectOptions.setCleanSession(connectorConfiguration.getBoolean("mqtt.connector.clean_session"));
         mqttConnectOptions.setKeepAliveInterval(connectorConfiguration.getInt("mqtt.connector.connection_timeout"));
         if (connectorConfiguration.getBoolean("mqtt.connector.ssl") == true) {
-            logger.debug("SSL TRUE for MqttSinkConnectorTask: '{}, and mqtt client: '{}'.", connectorName, mqttClientId);
+            logger.info("SSL TRUE for MqttSinkConnectorTask: '{}, and mqtt client: '{}'.", connectorName, mqttClientId);
             try {
                  String caCrtFilePath = connectorConfiguration.getString("mqtt.connector.ssl.ca");
                  String crtFilePath = connectorConfiguration.getString("mqtt.connector.ssl.crt");
@@ -115,7 +115,7 @@ public class MqttSinkConnectorTask extends SinkTask {
                 logger.error(e);
             }
         } else {
-            logger.debug("SSL FALSE for MqttSinkConnectorTask: '{}, and mqtt client: '{}'.", connectorName, mqttClientId);
+            logger.info("SSL FALSE for MqttSinkConnectorTask: '{}, and mqtt client: '{}'.", connectorName, mqttClientId);
         }
 
         try {
