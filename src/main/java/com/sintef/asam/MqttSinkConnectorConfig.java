@@ -24,7 +24,7 @@ public class MqttSinkConnectorConfig extends AbstractConfig {
         configDef.define("mqtt.connector.broker.uri", Type.STRING,
                 "tcp://localhost:1883", Importance.HIGH,
                 "Full uri with port to mqtt broker")
-                .define("mqtt.connector.client.id", Type.STRING, "sink_connector", Importance.MEDIUM,
+                .define("mqtt.connector.client.id", Type.STRING, "kafka_sink_connector", Importance.MEDIUM,
         "Client id used by connector to subscribe to mqtt broker")
                 .define("mqtt.connector.clean_session", Type.BOOLEAN, true, Importance.MEDIUM,
         "If connection should begin with clean session")

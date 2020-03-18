@@ -30,7 +30,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.sintef.asam.AsamMqttSinkConnector</mainClass>
+                            <mainClass>com.sintef.asam.MqttSinkConnector</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

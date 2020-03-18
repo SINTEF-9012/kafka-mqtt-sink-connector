@@ -58,6 +58,8 @@ public class MqttSinkConnectorTask extends SinkTask {
                 JSONObject jsonSinkRecord;
                 String downstreamMqttTopic;
                 byte[] downstreamMqttPayload;
+                // Try clause to fetch dynamic topic from the Kafka record.
+                // "mqttTopicKey" can be used as a static topic for mqtt, and payload can be fetched directly from record.
                 try {
                     try {
                         String stringSinkRecord = new String((byte[])sinkRecord.value(), "UTF-8");
@@ -73,6 +75,7 @@ public class MqttSinkConnectorTask extends SinkTask {
                     logger.error("Could not convert record to JSON '{}', and extract mqtt topic with key '{}'", sinkRecord, mqttTopicKey);
                     throw new MqttException(e);
                 }
+                // End of try clause to fetch dynamic topic from the Kafka record.
                 MqttMessage mqttMessage = new MqttMessage();
                 mqttMessage.setPayload(downstreamMqttPayload);
                 mqttMessage.setQos(qos);
