@@ -67,7 +67,7 @@ public class MqttSinkConnectorTask extends SinkTask {
                         logger.debug("Successfull JSON parsing of record: '{}',\n for connector: '{}'", jsonSinkRecord.toString(), connectorName);
                         jsonSinkRecord.getString(mqttTopicKey);
                         downstreamMqttTopic = jsonSinkRecord.getString(mqttTopicKey);
-                        downstreamMqttPayload = jsonSinkRecord.get("cam").toString().getBytes("UTF-8");
+                        downstreamMqttPayload = jsonSinkRecord.toString().getBytes("UTF-8");
                     } catch (UnsupportedEncodingException e) {
                         throw new JSException(e.getMessage());
                     }
