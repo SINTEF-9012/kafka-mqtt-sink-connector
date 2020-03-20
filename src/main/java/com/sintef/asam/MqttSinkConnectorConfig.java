@@ -46,7 +46,7 @@ public class MqttSinkConnectorConfig extends AbstractConfig {
                         "Kafka topic to publish on. This depends on processing unit.")
                 .define("mqtt.connector.kafka.name", Type.STRING, "mqtt_downstream", Importance.MEDIUM,
                         "Name used by conenctor to Kafka connection api.")
-                .define("mqtt.connector.mqttt_topic_key", Type.STRING, "topic", Importance.MEDIUM,
+                .define("mqtt.connector.mqtt_topic_key", Type.STRING, "topic", Importance.MEDIUM,
                         "Mqtt topic key, used to fetch topic from json record. processing unit. Topic used to publish to mqtt broker");
         logger.debug("ConfigDef loaded: '{}'", configDef.toEnrichedRst());
         return configDef;
