@@ -1,5 +1,5 @@
 # kafka-mqtt-sink-connector
-A connector plugin to use with Kafka's Connect API. It is contains functionality to extract a topic from the Kafka record, and publish to that topic on the mqtt broker, if dynamic publishing is required. The connector can be configured to use SSL in communication with the mqtt broker.
+A connector plugin to use with Kafka's Connect API. It contains functionality to extract a topic from the Kafka record and publish to that topic on the mqtt broker, if dynamic publishing is required. The connector can be configured to use SSL in communication with the mqtt broker.
 
 ## Setting up a single Zookeeper and Kafka instance
 To be able to test the connector, we first need to set up the Kafka infrastructure. For simplicity, we start by configuring single nodes (one Zookeeper and one Kafka).
