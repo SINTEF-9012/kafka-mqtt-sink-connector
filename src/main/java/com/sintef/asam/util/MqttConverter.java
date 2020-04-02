@@ -1,9 +1,10 @@
 package com.sintef.asam.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.kafka.common.record.Record;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ public class MqttConverter {
 
     private void convert() {
         try {
-            JSONObject payloadAsJSON = new JSONObject(record.toString());
+            JSONObject payloadAsJSON = JSON.parseObject(record.toString());
             mqttTopic = payloadAsJSON.getString(mqttTopicKey);
             mqttMessage.setPayload(record.value().array());
             mqttMessage.setQos(qos);

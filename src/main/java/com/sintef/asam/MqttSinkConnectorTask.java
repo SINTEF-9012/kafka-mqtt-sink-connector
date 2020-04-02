@@ -1,5 +1,6 @@
 package com.sintef.asam;
 
+import com.alibaba.fastjson.JSONException;
 import com.sintef.asam.util.SSLUtils;
 import com.sintef.asam.util.Version;
 import netscape.javascript.JSException;
@@ -12,9 +13,8 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
@@ -43,7 +43,7 @@ public class MqttSinkConnectorTask extends SinkTask {
         connectorConfiguration = new MqttSinkConnectorConfig(map);
         connectorName = connectorConfiguration.getString("mqtt.connector.kafka.name");
         mqttClientId = connectorConfiguration.getString("mqtt.connector.client.id");
-        mqttTopicKey = connectorConfiguration.getString("mqtt.connector.mqttt_topic_key");
+        mqttTopicKey = connectorConfiguration.getString("mqtt.connector.mqtt_topic_key");
         qos = connectorConfiguration.getInt("mqtt.connector.qos");
         logger.info("Starting MqttSinkConnectorTask with connector name: '{}'", connectorName);
         initMqttClient();
@@ -63,10 +63,10 @@ public class MqttSinkConnectorTask extends SinkTask {
                 try {
                     try {
                         String stringSinkRecord = new String((byte[])sinkRecord.value(), "UTF-8");
-                        jsonSinkRecord = new JSONObject(stringSinkRecord);
+                        jsonSinkRecord = JSON.parseObject(stringSinkRecord);
                         logger.debug("Successfull JSON parsing of record: '{}',\n for connector: '{}'", jsonSinkRecord.toString(), connectorName);
-                        jsonSinkRecord.getString(mqttTopicKey);
                         downstreamMqttTopic = jsonSinkRecord.getString(mqttTopicKey);
+                        logger.debug("Successfull DOWNSTREAM topic: '{}',\n for connector: '{}'", downstreamMqttTopic, connectorName);
                         downstreamMqttPayload = jsonSinkRecord.toString().getBytes("UTF-8");
                     } catch (UnsupportedEncodingException e) {
                         throw new JSException(e.getMessage());
