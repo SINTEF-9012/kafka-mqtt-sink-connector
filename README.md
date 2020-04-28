@@ -62,11 +62,11 @@ The Kafka Connect API is what we utilise as a framework around our connectors, t
 Follow the respective steps below to start Kafka Connect in preferred mode.
 
 _Connect in general_
-Build this java maven project, but navigating to root `kafka-mqtt-source-connector` in a terminal and typing:
+Build this java maven project, but navigating to root `kafka-mqtt-sink-connector` in a terminal and typing:
 ```
 mvn install
 ```
-`Copy the kafka-mqtt-source-connector-"version".jar` from your maven target directory to the directory `/usr/share/java/kafka`:
+`Copy the kafka-mqtt-sink-connector-"version".jar` from your maven target directory to the directory `/usr/share/java/kafka`:
 
 ```
 sudo mkdir /usr/share/java/kafka
@@ -89,7 +89,7 @@ mqtt.connector.broker.uri=tcp://0.0.0.0:1883
 mqtt.connector.mqtt_topic_key=topic
 topics.regex=test*
 ```
-where `mqtt.connector.mqtt_topic_key` is the key used by the connector to fetch a topic from the Kafka record. When the Kafka record is pushed to the sink connector, the sink connector decodes the record into a JSON. After that a looup is made on the `mqtt.connector.mqtt_topic_key` and the fetched value is the topic used to publish to the mqtt broker.
+where `mqtt.connector.mqtt_topic_key` is the key used by the connector to fetch a topic from the Kafka record. When the Kafka record is pushed to the sink connector, the sink connector decodes the record into a JSON. After that a lookup is made on the `mqtt.connector.mqtt_topic_key` and the fetched value is the topic used to publish to the mqtt broker.
 `topics.regex` is standard property of the SinkConnector we inherit from, and the regex determines which topic(s) the sink connector should subscribe to from Kafka. 
 
 4. Start _Connect Standalone_ with our connector by typing (this may take a minute or two):
@@ -99,6 +99,7 @@ where `mqtt.connector.mqtt_topic_key` is the key used by the connector to fetch 
 
 __*Connect Distributed*__
 Kafka Connect Distributed does not need properties files to configure connectors. It uses the Kafka Connect REST-interface.
+
 5. Uncomment `plugin.path` in `"path-to-kafka"/kafka_2.13-2.4.1/config/connect-distributed.properties`, so that it is set to
 ```
 plugin.path=/usr/share/java,/usr/local/share/kafka/plugins,/usr/local/share/java/
@@ -108,19 +109,21 @@ and that `rest.port` so that it is set to
 rest.port=19005
 ```
 which will help one to avoid some "bind" exceptions. This will be the port for the Connect REST-interface.
+
 6. Start _Connect Distributed_ with by typing (this may take a minute or two):
 ```
 "path-to-kafka"/kafka_2.13-2.4.1/bin/connect-distributed.sh "path-to-kafka"/kafka_2.13-2.4.1/config/connect-distributed.properties
 ```
 7. Start our connector by posting the following command to the Connect REST-interface:
 ```
-curl -s -X POST -H 'Content-Type: application/json' http://127.0.0.1:19005/connectors -d '{"name":"mqtt-sink-connector","config":{"connector.class":"com.sintef.asam.MqttSinkConnector","tasks.max":"1","mqtt.connector.broker.uri":"tcp://localhost:1883", "mqtt.connector.broker.topics.regex":"test*","mqtt.connector.mqtt_topic_key":"topic"}}'
+curl -s -X POST -H 'Content-Type: application/json' http://127.0.0.1:19005/connectors -d '{"name":"mqtt-sink-connector","config":{"connector.class":"com.sintef.asam.MqttSinkConnector","tasks.max":"1","mqtt.connector.broker.uri":"tcp://localhost:1883", "topics.regex":"test*","mqtt.connector.mqtt_topic_key":"topic"}}'
 ```
 8. Inspect the terminal where you started Conncet Distributed, and after the connector seem to have successfully started, check the existence by typing:
 ```
 curl 'Content-Type: application/json' http://127.0.0.1:19005/connectors
 ```
 where the response is an array with connectors by name.
+
 9. Test the connector by starting a mosquitto subscriber - subscribing to the EMQX broker - in a new terminal window:
 ```
 mosquitto_sub -h 127.0.0.1 -p 1883 -t test
