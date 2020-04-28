@@ -5,7 +5,7 @@ A connector plugin to use with Kafka's Connect API. It contains functionality to
 To be able to test the connector, we first need to set up the Kafka infrastructure. For simplicity, we start by configuring single nodes (one Zookeeper and one Kafka).
 
 ### Prerequisites
-- Java version >8 installed to run Kafka and this source-connector. Check if Java is installed, and which version by running `java -version` in your terminal. We use `openjdk version "11.0.6" 2020-01-14`.
+- Java version >8 installed to run Kafka and this sink-connector. Check if Java is installed, and which version by running `java -version` in your terminal. We use `openjdk version "11.0.6" 2020-01-14`.
 - Linux. We are running this setup on Ubuntu 16.4.
 - A mqtt-broker. We use EMQX
 - Maven. Check if maven is installed properly with running `mvn -v` in your terminal. We use Maven 3.6.0
@@ -62,11 +62,11 @@ The Kafka Connect API is what we utilise as a framework around our connectors, t
 Follow the respective steps below to start Kafka Connect in preferred mode.
 
 _Connect in general_
-Build this java maven project, but navigating to root `kafka-mqtt-source-connector` in a terminal and typing:
+Build this java maven project, but navigating to root `kafka-mqtt-sink-connector` in a terminal and typing:
 ```
 mvn install
 ```
-`Copy the kafka-mqtt-source-connector-"version".jar` from your maven target directory to the directory `/usr/share/java/kafka`:
+`Copy the kafka-mqtt-sink-connector-"version".jar` from your maven target directory to the directory `/usr/share/java/kafka`:
 
 ```
 sudo mkdir /usr/share/java/kafka
@@ -79,8 +79,8 @@ __*Connect Standalone*__
 ```
 plugin.path=/usr/share/java,/usr/local/share/kafka/plugins,/usr/local/share/java/
 ```
-2. Copy  the accompanying source connector properties file in this repository, **[sink-connect-mqtt.properties](https://github.com/SINTEF-9012/kafka-mqtt-sink-connector/src/main/resources/sink-connect-mqtt.properties)**, to `"path-to-kafka"/kafka_2.13-2.4.1/config/` (or create a new properties file with the same name in the given directory).
-3. Ensure the following configuration in `source-connect-mqtt.properties`:
+2. Copy  the accompanying sink connector properties file in this repository, **[sink-connect-mqtt.properties](https://github.com/SINTEF-9012/kafka-mqtt-sink-connector/src/main/resources/sink-connect-mqtt.properties)**, to `"path-to-kafka"/kafka_2.13-2.4.1/config/` (or create a new properties file with the same name in the given directory).
+3. Ensure the following configuration in `sink-connect-mqtt.properties`:
 ```
 name=mqtt-sink-connector
 tasks.max=1
@@ -114,7 +114,8 @@ which will help one to avoid some "bind" exceptions. This will be the port for t
 ```
 7. Start our connector by posting the following command to the Connect REST-interface:
 ```
-curl -s -X POST -H 'Content-Type: application/json' http://127.0.0.1:19005/connectors -d '{"name":"mqtt-sink-connector","config":{"connector.class":"com.sintef.asam.MqttSinkConnector","tasks.max":"1","mqtt.connector.broker.uri":"tcp://localhost:1883", "mqtt.connector.broker.topics.regex":"test*","mqtt.connector.mqtt_topic_key":"topic"}}'
+curl -s -X POST -H 'Content-Type: application/json' http://127.0.0.1:19005/connectors -d '{"name":"mqtt-sink-connector","config":{"connector.class":"com.sintef.asam.MqttSinkConnector","tasks.max":"1","mqtt.connector.broker.uri":"tcp://localhost:1883", "topics.regex":"test*","mqtt.connector.mqtt_topic_key":"topic","value.converter": "org.apache.kafka.connect.converters.ByteArrayConverter"}}'
+
 ```
 8. Inspect the terminal where you started Conncet Distributed, and after the connector seem to have successfully started, check the existence by typing:
 ```
@@ -158,7 +159,7 @@ __*Connect Distributed*__
  ```
 curl -X DELETE 'Content-Type: application/json' http://127.0.0.1:19005/connectors/mqtt-sink-connector
 ```
-if your connector was named `mqtt-source-connector`. Check running connectors by name using:
+if your connector was named `mqtt-sink-connector`. Check running connectors by name using:
 ```
 curl 'Content-Type: application/json' http://127.0.0.1:19005/connectors
 ```
