@@ -124,6 +124,8 @@ curl -s -X POST -H 'Content-Type: application/json' http://127.0.0.1:19005/conne
 curl 'Content-Type: application/json' http://127.0.0.1:19005/connectors
 ```
 where the response is an array with connectors by name.
+
+
 9. Test the connector by starting a mosquitto subscriber - subscribing to the EMQX broker - in a new terminal window:
 ```
 mosquitto_sub -h 127.0.0.1 -p 1883 -t test
@@ -144,7 +146,7 @@ Note that the sink connector is made to receive JSON formatted messages. The JSO
 
 __Setting up your own certificate authority (for test purposes) and configure MQTT broker to use SSL__
 
-We first need certificates and keys to encrypt our _secure socket layer_ (SSL) communication to and from the broker. To make your own certificate authority, and to create a client certificate and a client key, this provides very thorough and instructive guide: https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
+11. We first need certificates and keys to encrypt our _secure socket layer_ (SSL) communication to and from the broker. To make your own certificate authority, and to create a client certificate and a client key, this provides very thorough and instructive guide: https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
 
 Let us assume that you have a `/home/CA.crt`, a `/home/client.crt` and a `/home/client.key`, we configure our EMQX broker by finding the configuration file `"path-to-emqx"/etc/emqx.conf` and setting/uncommenting the following properties:
  ```
@@ -157,6 +159,8 @@ listener.ssl.external.cacertfile = /home/CA.cert
 Then restart your mqtt broker.
 
 __*Connect Distributed*__
+
+
 12. Delete the previous made connector using TCP, if one is running, using the following call to the Connect REST-interface:
  ```
 curl -X DELETE 'Content-Type: application/json' http://127.0.0.1:19005/connectors/mqtt-sink-connector
